@@ -16,10 +16,23 @@ function App() {
       const API_KEY = import.meta.env.VITE_NASA_API_KEY;
       const url = `https://api.nasa.gov/planetary/apod?api_key=${API_KEY}`;
 
+      const today = (new Date()).toDateString();
+      const localKey = `NASA-${today}`
+
+      if (localStorage.getItem(localKey)) {
+        const apiData = JSON.parse(localStorage.getItem(localKey))
+        setData(apiData);
+        console.log('from cache');
+        return
+      }
+      localStorage.clear();
+
       try {
         const res = await fetch(url);
         const apiData = await res.json();
+        localStorage.setItem(localKey, JSON.stringify(apiData));
         setData(apiData);
+        console.log('from api')
       } catch (error) {
         console.error(error);
       }
@@ -31,14 +44,16 @@ function App() {
   return (
     <>
       {data ? (
-        <Main />
+        <Main data={data}/>
       ) : (
         <div className="loadingState">
           <i className="fa-solid fa-gear"></i>
         </div>
       )}
-      {showModal && <SideBar handleModalToggle={handleModalToggle} />}
-      {data && <Footer handleModalToggle={handleModalToggle} />}
+      {showModal && (
+        <SideBar handleModalToggle={handleModalToggle} data={data} />
+      )}
+      {data && <Footer handleModalToggle={handleModalToggle} data={data} />}
     </>
   );
 }
