@@ -1,7 +1,9 @@
-const Sidebar = () => {
+const Sidebar = (props) => {
+  const { handleModalToggle } = props;
+
   return (
     <div className="sidebar">
-      <div className="bgOverlay"></div>
+      <div className="bgOverlay" onClick={handleModalToggle}></div>
       <div className="sidebarContents">
         <h2>Martian Landscape</h2>
         <div>
@@ -12,7 +14,7 @@ const Sidebar = () => {
             praesentium maiores. Dolor!
           </p>
         </div>
-        <button>
+        <button onClick={handleModalToggle}>
           <i className="fa-solid fa-arrow-right"></i>
         </button>
       </div>
